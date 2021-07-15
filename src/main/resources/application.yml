@@ -1,0 +1,8 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  paths-to-match: /**
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /swagger-ui.html
