@@ -21,11 +21,12 @@ public class PropertyPayload {
     private String propName;
     @NotEmpty(message = "O bairro não pode estar vazio.")
     @Size(max = 45, message = "O comprimento do bairro não pode exceder 45 caracteres.")
+    @Schema(example = "Vila Pauliceia")
     private String propDistrict;
-    @NotNull(message = "O valor do metro quadrado no bairro não pode estar vazio.")
-    @DecimalMin(value = "0.01")
-    @Digits(integer = 13, fraction = 2)
-    private BigDecimal valueDistricM2;
+//    @NotNull(message = "O valor do metro quadrado no bairro não pode estar vazio.")
+//    @DecimalMin(value = "0.01")
+//    @Digits(integer = 13, fraction = 2)
+//    private BigDecimal valueDistricM2;
     @NotEmpty(message = "Deve haver pelo menos um quarto.")
     @Valid
     private List<RoomPayload> rooms;
