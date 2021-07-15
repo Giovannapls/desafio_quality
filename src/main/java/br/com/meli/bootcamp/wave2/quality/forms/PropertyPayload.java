@@ -1,9 +1,7 @@
 package br.com.meli.bootcamp.wave2.quality.forms;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -11,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class PropertyPayload {
@@ -33,6 +33,8 @@ public class PropertyPayload {
 
 
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @Getter
     @Setter
     public static class RoomPayload {
