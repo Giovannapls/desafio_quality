@@ -1,6 +1,7 @@
 package br.com.meli.bootcamp.wave2.quality.unit;
 
 import br.com.meli.bootcamp.wave2.quality.entities.District;
+import br.com.meli.bootcamp.wave2.quality.exceptions.DistrictNotFoundException;
 import br.com.meli.bootcamp.wave2.quality.forms.PropertyPayload;
 import br.com.meli.bootcamp.wave2.quality.repositories.DistrictRepository;
 import br.com.meli.bootcamp.wave2.quality.responses.RealEstateValueResponse;
@@ -12,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -113,5 +114,25 @@ public class ServiceImplTest {
 
         //assert
         assertThat(result).usingRecursiveComparison().isEqualTo(expectedRealEstateValueResponse);
+    }
+
+    @Test
+    void existsByName_shouldThrowExceptionWhenDistrictDoesNotExists(){
+
+        //arrange
+        Mockito.when(repository.existsByName("Vila pauliceia")).thenReturn(false);
+
+        assertThatThrownBy(() ->service.getRoomsArea(house)).isInstanceOf(DistrictNotFoundException.class);
+
+    }
+
+    @Test
+    void findByName_shouldThrowExceptionWhenDistrictDoesNotExists(){
+
+        //arrange
+        Mockito.when(repository.findByName("Vila pauliceia")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->service.getPropertyValue(house)).isInstanceOf(DistrictNotFoundException.class);
+
     }
 }
