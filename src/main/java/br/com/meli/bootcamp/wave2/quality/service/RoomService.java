@@ -1,15 +1,26 @@
 package br.com.meli.bootcamp.wave2.quality.service;
-
+import br.com.meli.bootcamp.wave2.quality.exceptions.ApiException;
 import br.com.meli.bootcamp.wave2.quality.forms.PropertyPayload;
+import br.com.meli.bootcamp.wave2.quality.repositories.DistrictRepository;
 import br.com.meli.bootcamp.wave2.quality.response.RealEstatePropertiesResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
+
+    DistrictRepository repository;
+    @Autowired
+    public RoomService(DistrictRepository repository) {
+        this.repository = repository;
+    }
+
+
+
 
     public BigDecimal calculateSquaredMeters(PropertyPayload house) {
         return house.getRooms().stream()
@@ -33,6 +44,10 @@ public class RoomService {
     }
 
     public RealEstatePropertiesResponse getResponse(PropertyPayload house) {
+        if (repository.findByName(house.getPropDistrict()).isEmpty()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "invalid_district_name", "District does not exist");
+        }
+
         var rooms = house.getRooms().stream()
                 .map(this::createRoomResponse)
                 .collect(Collectors.toList());
@@ -54,4 +69,6 @@ public class RoomService {
                 room.getRoomWidth(),
                 room.getRoomLength());
     }
+
+
 }

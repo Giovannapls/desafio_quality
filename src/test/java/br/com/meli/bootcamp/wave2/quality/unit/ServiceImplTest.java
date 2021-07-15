@@ -1,10 +1,12 @@
 package br.com.meli.bootcamp.wave2.quality.unit;
 
 import br.com.meli.bootcamp.wave2.quality.forms.PropertyPayload;
+import br.com.meli.bootcamp.wave2.quality.repositories.DistrictRepository;
 import br.com.meli.bootcamp.wave2.quality.response.RealEstatePropertiesResponse;
 import br.com.meli.bootcamp.wave2.quality.service.RoomService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -14,10 +16,12 @@ import static org.assertj.core.api.Assertions.*;
 public class ServiceImplTest {
 
     private RoomService service;
+    private DistrictRepository repository;
 
     @BeforeEach
     void setUp() {
-        this.service = new RoomService();
+        this.repository = Mockito.mock(DistrictRepository.class);
+        this.service = new RoomService(repository);
     }
 
     @Test
@@ -93,6 +97,11 @@ public class ServiceImplTest {
 
         //assert
         assertThat(result).isEqualTo(new BigDecimal(100));
+
+    }
+
+    @Test
+    void getResponse_shouldReturnRealEstatePropertiesCorrectly() {
 
     }
 }
