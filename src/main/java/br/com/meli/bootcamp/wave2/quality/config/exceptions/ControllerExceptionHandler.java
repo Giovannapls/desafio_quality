@@ -9,6 +9,7 @@ import br.com.meli.bootcamp.wave2.quality.exceptions.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,137 +21,142 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+    @Autowired
+    private Clock clock;
 
-  /**
-   * Handle all exceptions created by us in the API
-   *
-   * @param exception - Exception to be handled
-   * @return Human friendly response
-   */
-  @ExceptionHandler(ApiException.class)
-  public ResponseEntity<ApiError> handleApiException(ApiException exception) {
-    var errorDto = new ApiError(exception);
-    return ResponseEntity.status(errorDto.getStatusCode()).body(errorDto);
-  }
+    /**
+     * Handle all exceptions created by us in the API
+     *
+     * @param exception - Exception to be handled
+     * @return Human friendly response
+     */
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiError> handleApiException(ApiException exception) {
+        var errorDto = new ApiError(exception, LocalDateTime.now(this.clock));
+        return ResponseEntity.status(errorDto.getStatusCode()).body(errorDto);
+    }
 
-  /**
-   * Handle resource not found exception, that's not required because ResourceNotFound extends
-   * ApiError But we want to give more information to the api user
-   *
-   * @param exception - Exception to be handled
-   * @return Human friendly response
-   */
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler(ResourceNotFoundException.class)
-  @ApiResponse(
-      responseCode = "404",
-      description = "Unable to find resource in server",
-      content =
-          @Content(
-              schema = @Schema(implementation = ResourceNotFoundError.class),
-              mediaType = "application/json"))
-  public ResponseEntity<ResourceNotFoundError> handleResourceNotFound(
-      ResourceNotFoundException exception) {
-    var errorDto = new ResourceNotFoundError(exception);
-    return ResponseEntity.status(exception.getStatusCode()).body(errorDto);
-  }
+    /**
+     * Handle resource not found exception, that's not required because ResourceNotFound extends
+     * ApiError But we want to give more information to the api user
+     *
+     * @param exception - Exception to be handled
+     * @return Human friendly response
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ApiResponse(
+            responseCode = "404",
+            description = "Unable to find resource in server",
+            content =
+            @Content(
+                    schema = @Schema(implementation = ResourceNotFoundError.class),
+                    mediaType = "application/json"))
+    public ResponseEntity<ResourceNotFoundError> handleResourceNotFound(
+            ResourceNotFoundException exception) {
+        var errorDto = new ResourceNotFoundError(exception,  LocalDateTime.now(this.clock));
+        return ResponseEntity.status(exception.getStatusCode()).body(errorDto);
+    }
 
-  /**
-   * This exception is thrown when a body validation fails
-   *
-   * @param exception - Exception to be handled
-   * @return Human friendly response
-   */
-  @ApiResponse(
-      responseCode = "400",
-      description = "Invalid input data.",
-      content =
-          @Content(
-              schema = @Schema(implementation = ValidationError.class),
-              mediaType = "application/json"))
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ValidationError> handleInvalidInput(
-      MethodArgumentNotValidException exception) {
-    var fieldErrors =
-        exception.getFieldErrors().stream()
-            .map(
-                fieldError ->
-                    new FieldValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
-            .collect(Collectors.toList());
+    /**
+     * This exception is thrown when a body validation fails
+     *
+     * @param exception - Exception to be handled
+     * @return Human friendly response
+     */
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid input data.",
+            content =
+            @Content(
+                    schema = @Schema(implementation = ValidationError.class),
+                    mediaType = "application/json"))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationError> handleInvalidInput(
+            MethodArgumentNotValidException exception) {
+        var fieldErrors =
+                exception.getFieldErrors().stream()
+                        .map(
+                                fieldError ->
+                                        new FieldValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
+                        .collect(Collectors.toList());
 
-    var dto = new ValidationError(HttpStatus.BAD_REQUEST, fieldErrors);
+        var dto = new ValidationError(HttpStatus.BAD_REQUEST, fieldErrors,  LocalDateTime.now(this.clock));
 
-    return ResponseEntity.status(dto.getStatusCode()).body(dto);
-  }
+        return ResponseEntity.status(dto.getStatusCode()).body(dto);
+    }
 
-  /**
-   * This exception is thrown when a request param validation fails
-   *
-   * @param exception - Exception to be handled
-   * @return Human friendly response
-   */
-  @ApiResponse(
-      responseCode = "400",
-      description = "Invalid input data.",
-      content =
-          @Content(
-              schema = @Schema(implementation = ValidationError.class),
-              mediaType = "application/json"))
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<ValidationError> handleInvalidInput(
-      ConstraintViolationException exception) {
+    /**
+     * This exception is thrown when a request param validation fails
+     *
+     * @param exception - Exception to be handled
+     * @return Human friendly response
+     */
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid input data.",
+            content =
+            @Content(
+                    schema = @Schema(implementation = ValidationError.class),
+                    mediaType = "application/json"))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ValidationError> handleInvalidInput(
+            ConstraintViolationException exception) {
 
-    var fieldErrors =
-        exception.getConstraintViolations().stream()
-            .map(
-                violation ->
-                    new FieldValidationError(
-                        violation.getPropertyPath().toString(),
-                        violation.getMessage(),
-                        violation.getInvalidValue()))
-            .collect(Collectors.toList());
+        var fieldErrors =
+                exception.getConstraintViolations().stream()
+                        .map(
+                                violation ->
+                                        new FieldValidationError(
+                                                violation.getPropertyPath().toString(),
+                                                violation.getMessage(),
+                                                violation.getInvalidValue()))
+                        .collect(Collectors.toList());
 
-    var dto = new ValidationError(HttpStatus.BAD_REQUEST, fieldErrors);
+        var dto = new ValidationError(HttpStatus.BAD_REQUEST, fieldErrors,  LocalDateTime.now(this.clock));
 
-    return ResponseEntity.status(dto.getStatusCode()).body(dto);
-  }
+        return ResponseEntity.status(dto.getStatusCode()).body(dto);
+    }
 
-  /**
-   * This exception is thrown when the server can't parse the user input
-   *
-   * @param exception - Exception to be handled
-   * @return Human friendly response
-   */
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<ApiError> handleMissingParams(HttpMessageNotReadableException exception) {
-    var dto =
-        new ApiError(
-            "bad_request", "Unable to parse request body!", HttpStatus.BAD_REQUEST.value());
-    return ResponseEntity.status(dto.getStatusCode()).body(dto);
-  }
+    /**
+     * This exception is thrown when the server can't parse the user input
+     *
+     * @param exception - Exception to be handled
+     * @return Human friendly response
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleMissingParams(HttpMessageNotReadableException exception) {
+        var dto =
+                new ApiError(
+                        "bad_request", "Unable to parse request body!", HttpStatus.BAD_REQUEST.value(), LocalDateTime.now(this.clock));
+        return ResponseEntity.status(dto.getStatusCode()).body(dto);
+    }
 
-  /**
-   * This exception is thrown when we don't have the route mapping that the user is looking for
-   *
-   * @param exception - Exception to be handled
-   * @return Human friendly response
-   */
-  @ExceptionHandler(NoHandlerFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ApiError> noRouteFound(
-      HttpServletRequest req, NoHandlerFoundException exception) {
-    ApiError apiError =
-        new ApiError(
-            "route_not_found",
-            String.format("Route %s not found", req.getRequestURI()),
-            HttpStatus.NOT_FOUND.value());
-    return ResponseEntity.status(apiError.getStatusCode()).body(apiError);
-  }
+    /**
+     * This exception is thrown when we don't have the route mapping that the user is looking for
+     *
+     * @param exception - Exception to be handled
+     * @return Human friendly response
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> noRouteFound(
+            HttpServletRequest req, NoHandlerFoundException exception) {
+        ApiError apiError =
+                new ApiError(
+                        "route_not_found",
+                        String.format("Route %s not found", req.getRequestURI()),
+                        HttpStatus.NOT_FOUND.value(), LocalDateTime.now(this.clock));
+        return ResponseEntity.status(apiError.getStatusCode()).body(apiError);
+    }
 }

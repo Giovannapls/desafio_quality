@@ -7,11 +7,9 @@ import br.com.meli.bootcamp.wave2.quality.responses.RealEstateValueResponse;
 import br.com.meli.bootcamp.wave2.quality.responses.RoomsSquareMeterResponse;
 import br.com.meli.bootcamp.wave2.quality.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,6 +22,7 @@ public class RealEstateController {
     private RoomService service;
 
     @PostMapping("/propertyArea")
+    @ResponseStatus(HttpStatus.OK)
     public HouseSquaredMetersResponse calculateSquaredMeters(@RequestBody @Valid PropertyPayload house){
         return service.getArea(house);
     }

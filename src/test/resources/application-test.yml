@@ -1,31 +1,27 @@
 springdoc:
   api-docs:
-    enabled: true
+    enabled: false
     path: /api-docs
   paths-to-match: /**
   swagger-ui:
-    disable-swagger-default-url: true
+    disable-swagger-default-url: false
     path: /swagger-ui.html
 
 spring:
   h2:
     console:
-      enabled: true
+      enabled: false
       path: /h2-console
   datasource:
-    data: classpath:data.sql
+    data: classpath:data-test.sql
     driverClassName: org.h2.Driver
     password: ''
-    url: jdbc:h2:mem:qualitydb
+    url: jdbc:h2:mem:testdb
     username: sa
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
+    show-sql: false
     hibernate:
       format_sql: true
     defer-datasource-initialization: true
-  mvc:
-    throw-exception-if-no-handler-found: true # Whether a "NoHandlerFoundException" should be thrown if no Handler was found to process a request.
-  web:
-    resources:
-      add-mappings: false
+

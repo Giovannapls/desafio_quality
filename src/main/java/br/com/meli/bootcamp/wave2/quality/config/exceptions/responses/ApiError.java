@@ -22,17 +22,18 @@ public class ApiError {
   @Schema(description = "When the error was registered in the server")
   private LocalDateTime timestamp;
 
-  public ApiError(ApiException exception) {
+
+  public ApiError(ApiException exception, LocalDateTime timeOfError) {
     this.code = exception.getCode();
     this.description = exception.getMessage();
     this.statusCode = exception.getStatusCode().value();
-    this.timestamp = LocalDateTime.now();
+    this.timestamp = timeOfError;
   }
 
-  public ApiError(String code, String description, Integer statusCode) {
+  public ApiError(String code, String description, Integer statusCode, LocalDateTime timeOfError) {
     this.code = code;
     this.description = description;
     this.statusCode = statusCode;
-    this.timestamp = LocalDateTime.now();
+    this.timestamp = timeOfError;
   }
 }
