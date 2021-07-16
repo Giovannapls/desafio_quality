@@ -1,0 +1,945 @@
+openapi: 3.0.1
+info:
+  title: Social Meli API
+  description: API for creating following and post system to connect sellers and costumers
+  version: 0.0.1
+externalDocs:
+  description: Github
+  url: 'https://github.com/lmarizmeli/social-meli/'
+servers:
+  - url: 'http://localhost:8080/v1'
+    description: Generated server url
+tags:
+  - name: User Controller
+    description: 'Routes related to users, creation and fetching'
+  - name: Follow Controller
+    description: Routes related to following actions and fetching follow related information
+  - name: Products/Posts Controller
+    description: Routes related to creation of posts and fetching
+  - name: Promotional Post Controller
+    description: Responsible for creating promotional posts and fetch them
+paths:
+  '/users/{userId}/unfollow/{userIdToUnfollow}':
+    post:
+      tags:
+        - Follow Controller
+      summary: unfollow seller
+      description: ' [US0007] Unfollows customer to seller, userId refers to customer and userIdToUnfollow refers to seller'
+      operationId: unfollow
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: userIdToUnfollow
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericMessageDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/users/{userId}/follow/{userIdToFollow}':
+    post:
+      tags:
+        - Follow Controller
+      summary: follow seller
+      description: '[US0001] Add seller to customer following list'
+      operationId: followSeller
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: userIdToFollow
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericMessageDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /users/seller:
+    post:
+      tags:
+        - User Controller
+      summary: create a seller
+      description: '[US0013] Create a new seller user'
+      operationId: createSeller
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForm'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserInfoDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /users/customer:
+    post:
+      tags:
+        - User Controller
+      summary: create a customer
+      description: '[US0013] Create a new customer user'
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForm'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserInfoDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/products/{userId}/countPromo/':
+    post:
+      tags:
+        - Promotional Post Controller
+      summary: promotional post count by seller
+      description: '[US0011] Get promotional posts count for a given seller'
+      operationId: getPromotionalPostCountBySeller
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PromotionalQuantityBySellerDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /products/newpromopost:
+    post:
+      tags:
+        - Promotional Post Controller
+      summary: create a promotional post
+      description: '[US0010] Create a promotional post'
+      operationId: createPromotionalPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePromocionalPostForm'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PromotionalPostDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /products/newpost:
+    post:
+      tags:
+        - Products/Posts Controller
+      summary: create new post
+      description: '[US0005] Create a new Post'
+      operationId: post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostForm'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PostDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/users/{userId}/followers/list':
+    get:
+      tags:
+        - Follow Controller
+      summary: customers following seller
+      description: '[US0003,US0008] List all customers that follow a given seller with a given sort method'
+      operationId: listSellerFollowers
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - name_asc
+              - name_desc
+            default: name_asc
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SellerFollowerListDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/users/{userId}/followers/count':
+    get:
+      tags:
+        - Follow Controller
+      summary: seller follower count
+      description: '[US0002] Return the follower count of a seller.'
+      operationId: followersCount
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FollowerCountDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/users/{userId}/followed/list':
+    get:
+      tags:
+        - Follow Controller
+      summary: get following sellers by customer
+      description: '[US0004,US0008] Get customer following list'
+      operationId: getSellersFollowedByUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - name_asc
+              - name_desc
+            default: name_asc
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserFollowingListDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/users/{id}':
+    get:
+      tags:
+        - User Controller
+      summary: fetch user
+      description: '[US0013] Fetch a user by id, works for customers and sellers'
+      operationId: getUserInfo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserInfoDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/products/{userId}/list/':
+    get:
+      tags:
+        - Promotional Post Controller
+      summary: promotional posts from seller
+      description: '[US0012] Get promotional posts from a given seller'
+      operationId: getPromotionalPostsBySeller
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListPromotionalPostsBySellerDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  '/products/followed/{userid}/list':
+    get:
+      tags:
+        - Products/Posts Controller
+      summary: get posts from followed sellers
+      description: '[US0006,US0009] Get all posts from followed Sellers of a certain user'
+      operationId: postsFromSellersByUser
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - date_asc
+              - date_desc
+            default: date_asc
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PostsBySellerDTO'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Unable to find resource in server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    CreatePostForm:
+      required:
+        - category
+        - date
+        - detail
+        - price
+        - userId
+      type: object
+      properties:
+        userId:
+          minimum: 0
+          type: integer
+          description: Seller's ID that is creating this post
+          format: int32
+          example: 1
+        date:
+          pattern: '\d{1,2}-\d{1,2}-\d{4}'
+          type: string
+          description: Date that the post was created
+          example: 09-07-2021
+        detail:
+          $ref: '#/components/schemas/DetailsProductForm'
+        category:
+          minimum: 0
+          type: integer
+          description: Category ID of the product
+          format: int32
+          example: 54
+        price:
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          description: Price of the product in the post
+          example: 153.5
+    DetailsProductForm:
+      required:
+        - brand
+        - color
+        - notes
+        - productName
+        - type
+      type: object
+      properties:
+        productName:
+          type: string
+          description: Name of the product
+          example: Mechanical Keyboard Cherry MX BROWN
+        type:
+          type: string
+          description: The type of the product
+          example: Keyboard
+        brand:
+          type: string
+          description: The brand that made the product
+          example: Logitech
+        color:
+          type: string
+          description: Color of the product
+          example: Black
+        notes:
+          type: string
+          description: Open field
+          example: A very good keyboard with a attractive price
+      description: Details of the product in this post
+    CreatePromocionalPostForm:
+      required:
+        - category
+        - date
+        - detail
+        - discount
+        - hasPromo
+        - price
+        - userId
+      type: object
+      properties:
+        userId:
+          minimum: 0
+          type: integer
+          description: Seller's ID that is creating this post
+          format: int32
+          example: 1
+        date:
+          pattern: '\d{1,2}-\d{1,2}-\d{4}'
+          type: string
+          description: Date that the post was created
+          example: 09-07-2021
+        detail:
+          $ref: '#/components/schemas/DetailsProductForm'
+        category:
+          minimum: 0
+          type: integer
+          description: Category ID of the product
+          format: int32
+          example: 54
+        price:
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          description: Price of the product in the post
+          example: 153.5
+        hasPromo:
+          type: boolean
+          description: If this post has a promotional price
+          example: true
+        discount:
+          maximum: 1
+          exclusiveMaximum: false
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          description: Percentage of discount in the given price
+          example: 0.1
+    UserForm:
+      required:
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username that will be registered
+          example: Ednaldo
+    DetailsProductDTO:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int32
+        productName:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        color:
+          type: string
+        notes:
+          type: string
+    FollowerCountDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+          example: 1
+        userName:
+          type: string
+          example: Ednaldo
+        followersCount:
+          type: integer
+          format: int64
+    GenericMessageDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    ListPromotionalPostsBySellerDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+          example: 1
+        userName:
+          type: string
+          example: Ednaldo
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromotionalPostDTO'
+    PostDTO:
+      type: object
+      properties:
+        idPost:
+          type: integer
+          format: int32
+        date:
+          type: string
+          format: date
+        detail:
+          $ref: '#/components/schemas/DetailsProductDTO'
+        category:
+          type: integer
+          format: int32
+        price:
+          type: number
+          format: double
+    PostsBySellerDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostDTO'
+    PromotionalPostDTO:
+      type: object
+      properties:
+        idPost:
+          type: integer
+          format: int32
+        date:
+          type: string
+          format: date
+        detail:
+          $ref: '#/components/schemas/DetailsProductDTO'
+        category:
+          type: integer
+          format: int32
+        price:
+          type: number
+          format: double
+        hasPromo:
+          type: boolean
+        discount:
+          type: number
+          format: double
+    PromotionalQuantityBySellerDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+          example: 1
+        userName:
+          type: string
+          example: Ednaldo
+        promoproducts_count:
+          type: integer
+          format: int64
+    SellerFollowerListDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+          example: 1
+        userName:
+          type: string
+          example: Ednaldo
+        followers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDTO'
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+          example: 1
+        userName:
+          type: string
+          example: Ednaldo
+    UserFollowingListDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+          example: 1
+        userName:
+          type: string
+          example: Ednaldo
+        followed:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDTO'
+    UserInfoDTO:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int32
+          example: 1
+        user_name:
+          type: string
+          example: Ednaldo
+        user_type:
+          type: string
+    ResourceNotFoundError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code of the exception that occurred
+          example: internal_error
+        description:
+          type: string
+          description: More specific details about the error
+          example: A internal server error occurred!
+        statusCode:
+          type: integer
+          description: HTTP Status code of the error
+          format: int32
+          example: 500
+        timestamp:
+          type: string
+          description: When the error was registered in the server
+          format: date-time
+        resource:
+          type: string
+          description: Resource type that wasn't present on the server
+          example: User
+        resourceId:
+          type: integer
+          description: ID used to search for the resource
+          format: int32
+          example: 1
+    FieldValidationError:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The key of the field that the validation error occurred
+          example: userName
+        message:
+          type: string
+          description: Description of the error that occurred
+          example: must have at least 5 characters
+        invalidValue:
+          type: object
+          description: The value that was passed to this field
+          example: Joe
+    ValidationError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code of the exception that occurred
+          example: internal_error
+        description:
+          type: string
+          description: More specific details about the error
+          example: A internal server error occurred!
+        statusCode:
+          type: integer
+          description: HTTP Status code of the error
+          format: int32
+          example: 500
+        timestamp:
+          type: string
+          description: When the error was registered in the server
+          format: date-time
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldValidationError'
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code of the exception that occurred
+          example: internal_error
+        description:
+          type: string
+          description: More specific details about the error
+          example: A internal server error occurred!
+        statusCode:
+          type: integer
+          description: HTTP Status code of the error
+          format: int32
+          example: 500
+        timestamp:
+          type: string
+          description: When the error was registered in the server
+          format: date-time
