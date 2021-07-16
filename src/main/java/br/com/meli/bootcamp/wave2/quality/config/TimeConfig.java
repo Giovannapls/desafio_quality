@@ -14,7 +14,7 @@ public class TimeConfig {
     @Profile("!test")
     @Bean
     public Clock createClock(){
-        return Clock.systemUTC();
+        return Clock.systemDefaultZone();
     }
 
     @Profile("test")

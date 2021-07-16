@@ -13,13 +13,14 @@ import org.springframework.context.annotation.Primary;
 public class ObjectMapperConfig {
     @Bean
     @Primary
-    public ObjectMapper config(){
+    public ObjectMapper config() {
         var mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper;
     }
+
     @Bean
     // Configure objectMapper user in Swagger
     public ModelResolver modelResolver(ObjectMapper objectMapper) {

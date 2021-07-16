@@ -24,4 +24,8 @@ spring:
     hibernate:
       format_sql: true
     defer-datasource-initialization: true
-
+  mvc:
+    throw-exception-if-no-handler-found: true # Whether a "NoHandlerFoundException" should be thrown if no Handler was found to process a request.
+  web:
+    resources:
+      add-mappings: false

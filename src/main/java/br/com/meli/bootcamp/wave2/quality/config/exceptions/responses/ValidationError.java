@@ -1,11 +1,14 @@
 package br.com.meli.bootcamp.wave2.quality.config.exceptions.responses;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@NoArgsConstructor
 @Getter
 public class ValidationError extends ApiError {
 
