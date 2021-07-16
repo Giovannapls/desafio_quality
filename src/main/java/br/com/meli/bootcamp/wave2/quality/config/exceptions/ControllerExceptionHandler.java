@@ -2,10 +2,8 @@ package br.com.meli.bootcamp.wave2.quality.config.exceptions;
 
 import br.com.meli.bootcamp.wave2.quality.config.exceptions.responses.ApiError;
 import br.com.meli.bootcamp.wave2.quality.config.exceptions.responses.FieldValidationError;
-import br.com.meli.bootcamp.wave2.quality.config.exceptions.responses.ResourceNotFoundError;
 import br.com.meli.bootcamp.wave2.quality.config.exceptions.responses.ValidationError;
 import br.com.meli.bootcamp.wave2.quality.exceptions.ApiException;
-import br.com.meli.bootcamp.wave2.quality.exceptions.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +20,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -41,28 +38,6 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ApiError> handleApiException(ApiException exception) {
         var errorDto = new ApiError(exception, LocalDateTime.now(this.clock));
         return ResponseEntity.status(errorDto.getStatusCode()).body(errorDto);
-    }
-
-    /**
-     * Handle resource not found exception, that's not required because ResourceNotFound extends
-     * ApiError But we want to give more information to the api user
-     *
-     * @param exception - Exception to be handled
-     * @return Human friendly response
-     */
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ApiResponse(
-            responseCode = "404",
-            description = "Unable to find resource in server",
-            content =
-            @Content(
-                    schema = @Schema(implementation = ResourceNotFoundError.class),
-                    mediaType = "application/json"))
-    public ResponseEntity<ResourceNotFoundError> handleResourceNotFound(
-            ResourceNotFoundException exception) {
-        var errorDto = new ResourceNotFoundError(exception,  LocalDateTime.now(this.clock));
-        return ResponseEntity.status(exception.getStatusCode()).body(errorDto);
     }
 
     /**
@@ -133,12 +108,12 @@ public class ControllerExceptionHandler {
      * @param exception - Exception to be handled
      * @return Human friendly response
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleMissingParams(HttpMessageNotReadableException exception) {
         var dto =
                 new ApiError(
-                        "bad_request", "Unable to parse request body!", HttpStatus.BAD_REQUEST.value(), LocalDateTime.now(this.clock));
+                        "unprocessable_entity", "Unable to parse request body!", HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now(this.clock));
         return ResponseEntity.status(dto.getStatusCode()).body(dto);
     }
 

@@ -3,10 +3,12 @@ package br.com.meli.bootcamp.wave2.quality.config.exceptions.responses;
 import br.com.meli.bootcamp.wave2.quality.exceptions.ApiException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 public class ApiError {
   @Schema(description = "Code of the exception that occurred", example = "internal_error")
   private String code;

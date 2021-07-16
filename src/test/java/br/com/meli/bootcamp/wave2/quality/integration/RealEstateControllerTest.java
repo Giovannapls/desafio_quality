@@ -138,7 +138,7 @@ public class RealEstateControllerTest {
                 "  \"code\": \"invalid_district_name\",\n" +
                 "  \"description\": \"District does not exist\",\n" +
                 "  \"status_code\": 400,\n" +
-                "  \"timestamp\": \"2011-12-03T08:15:30\"\n" +
+                "  \"timestamp\": \"2011-12-03T07:15:30\"\n" +
                 "}";
 
         //act

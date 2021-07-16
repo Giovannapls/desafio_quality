@@ -21,6 +21,7 @@ public class ObjectMapperConfig {
         return mapper;
     }
     @Bean
+    // Configure objectMapper user in Swagger
     public ModelResolver modelResolver(ObjectMapper objectMapper) {
         return new ModelResolver(objectMapper);
     }
