@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BiggestRoomResponse {
-    private String propertyName;
-    private RoomResponse biggestRoom;
+
+  private String propertyName;
+  private RoomResponse biggestRoom;
 }
