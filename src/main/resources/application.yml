@@ -6,7 +6,9 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /swagger-ui.html
-
+server:
+  servlet:
+    context-path: /v1
 spring:
   h2:
     console:
