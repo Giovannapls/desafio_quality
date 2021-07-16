@@ -1,0 +1,536 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Real Estate API",
+        "description": "API for calculations related to a property (area, value, etc)",
+        "version": "0.0.1"
+    },
+    "externalDocs": {
+        "description": "Github",
+        "url": "https://github.com/Victor-Planas/desafio_quality"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080/v1",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Real Estate Controller",
+            "description": "Routes related to real estate calculations"
+        },
+        {
+            "name": "Ping Controller",
+            "description": "Controller used to check if the API is working"
+        }
+    ],
+    "paths": {
+        "/realEstate/roomArea": {
+            "post": {
+                "tags": [
+                    "Real Estate Controller"
+                ],
+                "summary": "Calculate the area of all rooms on the Property",
+                "description": "Return the area of all rooms on the Property in Squared meters",
+                "operationId": "getRoomsArea",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyPayload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Invalid input data.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomsSquareMeterResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/realEstate/propertyPrice": {
+            "post": {
+                "tags": [
+                    "Real Estate Controller"
+                ],
+                "summary": "Calculate property Price",
+                "description": "Return the Property total price based on its Squared meters",
+                "operationId": "calculateValue",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyPayload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Invalid input data.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RealEstateValueResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/realEstate/propertyArea": {
+            "post": {
+                "tags": [
+                    "Real Estate Controller"
+                ],
+                "summary": "Calculate property Area",
+                "description": "Return the Property area in Squared meters",
+                "operationId": "calculateSquaredMeters",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyPayload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Invalid input data.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HouseSquaredMetersResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/realEstate/biggestRoom": {
+            "post": {
+                "tags": [
+                    "Real Estate Controller"
+                ],
+                "summary": "Calculate the biggest property room",
+                "description": "Return the Biggest room on the Property",
+                "operationId": "getBiggestRoom",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyPayload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Invalid input data.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BiggestRoomResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ping": {
+            "get": {
+                "tags": [
+                    "Ping Controller"
+                ],
+                "summary": "Test if the API is working",
+                "description": "Return pong if the request succeed",
+                "operationId": "ping",
+                "responses": {
+                    "400": {
+                        "description": "Invalid input data.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "FieldValidationError": {
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "type": "string",
+                        "description": "The key of the field that the validation error occurred",
+                        "example": "userName"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Description of the error that occurred",
+                        "example": "must have at least 5 characters"
+                    },
+                    "invalid_value": {
+                        "type": "object",
+                        "description": "The value that was passed to this field",
+                        "example": "Joe"
+                    }
+                }
+            },
+            "ValidationError": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Code of the exception that occurred",
+                        "example": "internal_error"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "More specific details about the error",
+                        "example": "A internal server error occurred!"
+                    },
+                    "status_code": {
+                        "type": "integer",
+                        "description": "HTTP Status code of the error",
+                        "format": "int32",
+                        "example": 500
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "description": "When the error was registered in the server",
+                        "format": "date-time"
+                    },
+                    "violations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FieldValidationError"
+                        }
+                    }
+                }
+            },
+            "ApiError": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Code of the exception that occurred",
+                        "example": "internal_error"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "More specific details about the error",
+                        "example": "A internal server error occurred!"
+                    },
+                    "status_code": {
+                        "type": "integer",
+                        "description": "HTTP Status code of the error",
+                        "format": "int32",
+                        "example": 500
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "description": "When the error was registered in the server",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "PropertyPayload": {
+                "required": [
+                    "prop_district",
+                    "prop_name",
+                    "rooms"
+                ],
+                "type": "object",
+                "properties": {
+                    "prop_name": {
+                        "maxLength": 30,
+                        "minLength": 0,
+                        "pattern": "^[A-Z]+.*",
+                        "type": "string",
+                        "example": "Casa amarela e grande"
+                    },
+                    "prop_district": {
+                        "maxLength": 45,
+                        "minLength": 0,
+                        "type": "string",
+                        "example": "Vila Pauliceia"
+                    },
+                    "rooms": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RoomPayload"
+                        }
+                    }
+                }
+            },
+            "RoomPayload": {
+                "required": [
+                    "room_length",
+                    "room_name",
+                    "room_width"
+                ],
+                "type": "object",
+                "properties": {
+                    "room_name": {
+                        "maxLength": 30,
+                        "minLength": 0,
+                        "pattern": "^[A-Z]+.*",
+                        "type": "string",
+                        "example": "Quarto azul e pequeno"
+                    },
+                    "room_width": {
+                        "maximum": 25,
+                        "exclusiveMaximum": false,
+                        "minimum": 0.01,
+                        "exclusiveMinimum": false,
+                        "type": "number"
+                    },
+                    "room_length": {
+                        "maximum": 33,
+                        "exclusiveMaximum": false,
+                        "minimum": 0.01,
+                        "exclusiveMinimum": false,
+                        "type": "number"
+                    }
+                }
+            },
+            "RoomResponse": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "area": {
+                        "type": "number"
+                    },
+                    "width": {
+                        "type": "number"
+                    },
+                    "length": {
+                        "type": "number"
+                    }
+                }
+            },
+            "RoomsSquareMeterResponse": {
+                "type": "object",
+                "properties": {
+                    "property_name": {
+                        "type": "string"
+                    },
+                    "rooms": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RoomResponse"
+                        }
+                    }
+                }
+            },
+            "RealEstateValueResponse": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "number"
+                    }
+                }
+            },
+            "HouseSquaredMetersResponse": {
+                "type": "object",
+                "properties": {
+                    "property_name": {
+                        "type": "string"
+                    },
+                    "area": {
+                        "type": "number"
+                    }
+                }
+            },
+            "BiggestRoomResponse": {
+                "type": "object",
+                "properties": {
+                    "property_name": {
+                        "type": "string"
+                    },
+                    "biggest_room": {
+                        "$ref": "#/components/schemas/RoomResponse"
+                    }
+                }
+            }
+        }
+    }
+}
