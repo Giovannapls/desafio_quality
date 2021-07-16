@@ -3,7 +3,9 @@ package br.com.meli.bootcamp.wave2.quality.exceptions;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/** All application exceptions must extends this class, so we can handle all in the same place */
+/**
+ * All application exceptions must extends this class, so we can handle all in the same place
+ */
 @Getter
 public class ApiException extends RuntimeException {
 
