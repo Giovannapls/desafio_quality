@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class ServiceImplTest {
+public class RealEstateServiceTest {
 
   private RealEstateService service;
   private DistrictRepository repository;
